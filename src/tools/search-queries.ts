@@ -11,6 +11,13 @@ const INDICATOR = z.enum([
   "AVG_CLICK_POSITION",
 ]);
 
+const ALL_INDICATORS = [
+  "TOTAL_SHOWS",
+  "TOTAL_CLICKS",
+  "AVG_SHOW_POSITION",
+  "AVG_CLICK_POSITION",
+] as const;
+
 const INDICATOR_LABELS: Record<string, string> = {
   TOTAL_SHOWS: "Shows",
   TOTAL_CLICKS: "Clicks",
@@ -79,7 +86,7 @@ export async function handleGetPopularSearchQueries(
       : lastNDays();
   const data = await apiGet(`/hosts/${params.host_id}/search-queries/popular`, {
     order_by: params.order_by ?? "TOTAL_SHOWS",
-    query_indicator: params.query_indicator,
+    query_indicator: params.query_indicator ?? [...ALL_INDICATORS],
     device_type_indicator: params.device_type_indicator,
     date_from: range.date_from,
     date_to: range.date_to,
@@ -144,7 +151,7 @@ export async function handleGetQueryAnalytics(
       ? { date_from: params.date_from, date_to: params.date_to }
       : lastNDays();
   const data = await apiGet(`/hosts/${params.host_id}/search-queries/all/history`, {
-    query_indicator: params.query_indicator,
+    query_indicator: params.query_indicator ?? [...ALL_INDICATORS],
     device_type_indicator: params.device_type_indicator,
     date_from: range.date_from,
     date_to: range.date_to,
